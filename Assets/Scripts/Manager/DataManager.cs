@@ -20,6 +20,9 @@ public class DataManager : IController<DataManager> {
 	private bool isGameOver = false;        // 是否游戏结束
 	private float lastManTime = 0.0f;       // 下一个出怪点
 
+	// ------游戏是否开始 
+	private bool _isStart = false ;
+
 	public int Column {
 		get { return columnCount; }
 	}
@@ -82,4 +85,15 @@ public class DataManager : IController<DataManager> {
 		CurGameTime = 0.0f;
 		lastManTime = 0.0f;
 	}
+
+	
+	public bool IsStart{
+		set{
+			_isStart = value ;
+		}
+		get{
+			return _isStart ;
+		}
+	}
+
 }

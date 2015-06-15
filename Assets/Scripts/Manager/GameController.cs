@@ -2,21 +2,33 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class GameController : MonoBehaviour {
+public class GameController :MonoBehaviour{
 
 	public Man man;
 	public Princess princess;
 	public GameObject parent;
 	public UILabel labelScore;
-	
+	public GameObject btnRetry ;
+	public UILabel scoreLbel ;
+	public GameObject gameOverView ;
+ 
 	private List<Man> manList = new List<Man>();
 	private int mScore = 0;
+
+	void Start(){
+		HideWhenStart();
+	}	
 
 	void Update () {
 		if (DataManager.getInstance ().IsGameOver) {
 			return;
 		}
 
+		if (!DataManager.getInstance ().IsStart) {
+			return;
+		} else {
+			ShowAfterStart();
+		}
 		DataManager.getInstance ().CurGameTime += Time.deltaTime;
 
 		if (DataManager.getInstance ().IsGoMan) {
@@ -82,5 +94,21 @@ public class GameController : MonoBehaviour {
 			return true;
 		}
 		return false;
+	}
+
+	public void HideWhenStart(){
+		princess.gameObject.SetActive (false);
+		btnRetry.gameObject.SetActive (false);
+		scoreLbel.gameObject.SetActive (false);
+	}
+
+	bool hasStart = false ;
+	public void ShowAfterStart(){
+		if (hasStart == true)
+			return;
+		princess.gameObject.SetActive (true);
+		btnRetry.gameObject.SetActive (true);
+		scoreLbel.gameObject.SetActive(true);
+		hasStart = true;
 	}
 }
