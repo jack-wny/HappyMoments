@@ -7,8 +7,7 @@ public class Princess : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		Vector3 yCenter = NGUIUtils.YCenterPosition ();
-		transform.localPosition = new Vector3(0, DataManager.getInstance ().EndPos - yCenter.y, 0) ;
+		transform.localPosition = new Vector3(0, DataManager.getInstance ().EndPos, 0) ;
 	}
 	
 	// Update is called once per frame

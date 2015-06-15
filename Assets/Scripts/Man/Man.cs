@@ -2,42 +2,40 @@
 using System.Collections;
 
 public class Man : MonoBehaviour {
-
-	private TweenPosition tween;
+	
 	private Vector3 initPos = Vector3.zero;
-
-	void Awake() {
-
-	}
-
+	private Vector3 endPos = Vector3.zero;
+	
 	void Start () {
-		InitTween (initPos);
+		Init (initPos);
 	}
 	
 	void Update () {
+		if (DataManager.getInstance ().IsGameOver) {
+			return;
+		}
 
+		float speed = DataManager.getInstance ().GetCurManSpeed ();
+		transform.localPosition += new Vector3 (0, speed * Time.deltaTime, 0);
+		if (transform.localPosition.y >= endPos.y) {
+			DataManager.getInstance().IsGameOver = true;
+		}
 	}
 
-	void InitTween(Vector3 pos) {
+	void Init(Vector3 pos) {
 		print (pos);
 
-		Vector3 yCenter = NGUIUtils.YCenterPosition ();
 		float startPos = DataManager.getInstance().StartPos;
 		float endtPos = DataManager.getInstance().EndPos;
 
-		tween = GetComponent<TweenPosition> ();
-		tween.from = new Vector3 (0, startPos, 0) + pos - yCenter;
-		tween.to = new Vector3 (0, endtPos, 0) + pos - yCenter;
-		tween.duration = 5.0f;
-		tween.delay = 0.0f;
-		tween.enabled = true;
+		transform.localPosition = new Vector3 (0, startPos, 0) + pos ;
+		endPos = new Vector3 (0, endtPos, 0) + pos;
 	}
 
 	public bool IsCanBeAttacked() {
-		Vector3 yCenter = NGUIUtils.YCenterPosition ();
 		float endtPos = DataManager.getInstance().EndPos;
 		float canBeAttackRange = DataManager.getInstance().CanBeAttackRange;
-		if (transform.localPosition.y >=  endtPos - canBeAttackRange - yCenter.y)
+		if (transform.localPosition.y >=  endtPos - canBeAttackRange)
 			return true;
 
 		return false;

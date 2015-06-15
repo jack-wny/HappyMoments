@@ -1,2 +1,0 @@
-# HappyMoments
-HappyMoments code resource

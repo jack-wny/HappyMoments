@@ -8,26 +8,21 @@ public class GameController : MonoBehaviour {
 	public Princess princess;
 	public GameObject parent;
 	public UILabel labelScore;
-
-	private float[] datas = {};
-	private float time = 0.0f;
-	private int index = 0;
+	
 	private List<Man> manList = new List<Man>();
 	private int mScore = 0;
 
-	void Start () {
-		datas = DataManager.getInstance ().QueueData;
-	}
-	
 	void Update () {
-		time += Time.deltaTime;
-		for (int i = index; i < datas.Length; ++i) {
-			if (time > datas[index]) {
-				Man child = GameObject.Instantiate(man);
-				AddMan(child);
-			} else {
-				break;
-			}
+		if (DataManager.getInstance ().IsGameOver) {
+			return;
+		}
+
+		DataManager.getInstance ().CurGameTime += Time.deltaTime;
+
+		if (DataManager.getInstance ().IsGoMan) {
+			DataManager.getInstance().GoMan();
+			Man child = GameObject.Instantiate(man);
+			AddMan(child);
 		}
 
 		if (IsClick() && princess.IsCanAttack()) {
@@ -48,7 +43,6 @@ public class GameController : MonoBehaviour {
 		child.transform.parent = parent.transform;
 		child.transform.localScale = new Vector3(1, 1, 1);
 		child.InitPos = new Vector3 (width * ((random + 1.0f) / (columnCount + 1.0f) - 0.5f), 0, 0);
-		index++;
 		manList.Add(child);
 	}
 
@@ -68,9 +62,11 @@ public class GameController : MonoBehaviour {
 		labelScore.text = "score:" + mScore;
 	}
 
-	void RetryGame() {
-		time = 0.0f;
-		index = 0;
+	public void OnClick () {
+		ResetGame ();
+	}
+
+	void ResetGame() {
 		mScore = 0;
 		AddScore(0);
 		for (int i = manList.Count - 1; i >= 0; --i) {
@@ -78,10 +74,7 @@ public class GameController : MonoBehaviour {
 			Destroy (child.gameObject);
 			manList.Remove (child);
 		}
-	}
-
-	public void OnClick () {
-		RetryGame ();
+		DataManager.getInstance ().ResetGame ();
 	}
 
 	bool IsClick() {
